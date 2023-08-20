@@ -1,10 +1,15 @@
-from db.db import Column, String, Model, Integer, DateTime
-from datetime.datetime import now
+#from db import db
+#from datetime import datetime
 
-class Message(Model):
-    __table__='messages'
 
-    id = Column(Integer, primary_key=True)
-    content = Column(String, nullable=False)
-    role = Column(String, nullable=False)
-    datetime = Column(DateTime(timezone=True), server_default=now())
+#class Message(db.Model):
+#    __tablename__='messages'
+#
+#   id = db.Column(db.Integer, primary_key=True)
+#    content = db.Column(db.String, nullable=False)
+#    role = db.Column(db.String, nullable=False)
+#    datetime = db.Column(db.DateTime(timezone=True), default=datetime.utcnow)  # Use datetime.utcnow diretamente
+#
+#    def __init__(self, content, role):
+#        self.content = content
+#        self.role = role
