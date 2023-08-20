@@ -48,3 +48,7 @@ Victor Guilherme Branco Portela
 
 Licença
 Este projeto é distribuído sob a licença: Quero Educação usando Key da OpenIA. Leia a licença antes de utilizar ou contribuir para o projeto.
+
+Possuimos outro repositório destinado a front-end : 
+
+    https://github.com/VictorGuui/Plotka-Front
