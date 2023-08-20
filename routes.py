@@ -16,8 +16,8 @@ def sendMessage():
         connection = connect_db()
         cursor = connection.cursor()
 
-        query = "INSERT INTO messages values (%s, %s)"
-        cursor.execute(query, (content, role))
+        query = "INSERT INTO messages (content, role, datetime) values (%s, %s, %s)"
+        cursor.execute(query, (content, role, datetime.now()))
         connection.commit()
 
         cursor.close()
