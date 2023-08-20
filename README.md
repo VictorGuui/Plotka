@@ -1,2 +1,2 @@
-# Plotka
-Hackathon(codeInQuero)
+#REPOSITORIO HACKATHON QUERO 2023
+- Equipe: Plotka
