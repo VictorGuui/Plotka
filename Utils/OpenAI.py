@@ -1,7 +1,6 @@
 import os
 import requests
 from dotenv import load_dotenv
-from config import config
 
 load_dotenv()
 
@@ -19,7 +18,7 @@ class OpenAI:
             json={
                 "model": "gpt-3.5-turbo",
                 "messages": message_history,
-            },
+            },     
         )
         data = None
         if response.status_code == 200:
@@ -38,7 +37,6 @@ class OpenAI:
                     json={
             "model": "text-davinci-003",
             "prompt": prompt,
-            "max_tokens": 2000,
             "temperature": 0
         }
         )

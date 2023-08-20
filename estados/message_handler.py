@@ -1,7 +1,9 @@
 from Utils.OpenAI import OpenAI
 import pandas as pd
 import json
-
+import re
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
 
 class Message_handler:
     def __init__(self) -> None:
@@ -16,7 +18,7 @@ class Message_handler:
 
         #verificar se a mensagem pode gerar um json com o curso
         pass_state = self.verify_information(
-            message=ai_message
+            message= ai_message
         )
 
         if pass_state is not None:
@@ -25,35 +27,36 @@ class Message_handler:
 
         # manter no mesmo e retornar a mensagem
         else:
+
             return ai_message
 
         # se retrieve information voltar false, eu mando para o gpt continuar a conversa deste estagio
 
     def verify_information(self, message):
-        json_response = json.loads(
-            self.AI.completion(
+
+        match = re.search(r'\{.*?\}', self.AI.completion(
                 prompt="leia a mensagem:\n"
                 + message
-                + "e retorne uma JSON com o seguinte modelo: { 'curso' : 'curso recomendado', 'motivo' : 'motivo de ter escolhido este curso' }"
-            ).replace("'", '"')
-        )
+                + " e retorne um JSON com o seguinte modelo: { 'curso' : 'curso recomendado, se ele não recomendou nada, apenas deixe vazio'}"
+            ).replace("'", '"'))
 
-        if "curso" in json_response.keys() and "motivo" in json_response.keys():
-            if json_response["curso"] != None and json_response["motivo"] != None:
-                return json_response
+        if match:
+            json_response = json.loads(match[0])
+
+            if "curso" in json_response.keys():
+                if json_response["curso"] != '':
+                    return json_response
 
         return None
 
     def get_course_link(self, course_json):
         course_df = pd.read_csv("assets/cursos.csv", sep=";")
-        filtered_df = course_df[
-            course_df["nome"].str.contains(course_json["curso"], case=False)
-        ]
-        course_link = (
-            self.AI.completion(
-                prompt=f"leia este dataframe {filtered_df[['nome','link']]} e retorne somente o link da linha que mais se assemelha a {course_json['curso']}"
-            )
-            .replace("\n", "")
-            .strip()
-        )
-        return course_link
+
+        most_similar = process.extractOne(course_json["curso"], course_df['nome'])[0]
+
+
+        link = course_df.loc[course_df['nome'] ==most_similar]['link'].head(1)._values[0]
+
+        link_matches = re.findall(r'https://\S+', link)
+
+        return link_matches[0]
